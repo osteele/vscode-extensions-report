@@ -1,0 +1,11 @@
+li {
+  display: inline-block;
+}
+
+li:not(:first-child):before {
+  content: ", ";
+}
+
+#key-bindings li {
+  display: inline-block;
+}

@@ -1,0 +1,24 @@
+doctype html
+html(lang="en")
+  head
+    title Visual Studio Code Extensions
+    style(type="text/css")
+      include packages.css
+  body
+    h1 Visual Studio Code Extensions
+    ul
+      each package in packages
+        div
+          h2
+            a(href=package.homepage)= package.displayName
+          div= package.description
+          if package.categories && package.categories.length > 0
+            h3 Categories
+            ul
+              each category in package.categories
+                li= category
+          if package.contributes && package.contributes.keybindings
+            h3#key-bindings Key Bindings
+            ul
+              each binding in package.contributes.keybindings
+                li= binding.key

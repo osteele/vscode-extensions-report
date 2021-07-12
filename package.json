@@ -1,0 +1,35 @@
+{
+  "name": "vscode-extensions-list",
+  "version": "0.0.1",
+  "description": "Create a formatted summary of active VSCode extensions",
+  "main": "index.ts",
+  "scripts": {
+    "dev": "ts-node src/index.ts",
+    "test": "true"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/osteele/vscode-extensions-summary.git"
+  },
+  "keywords": [
+    "vscode"
+  ],
+  "author": "Oliver Steele <steele@osteele.com> (https://osteele.com/)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/osteele/vscode-extensions-summary/issues"
+  },
+  "homepage": "https://github.com/osteele/vscode-extensions-summary#readme",
+  "devDependencies": {
+    "@types/commander": "^2.12.2",
+    "@types/node": "^16.3.1",
+    "@types/pug": "^2.0.5",
+    "ts-node": "^10.1.0",
+    "typescript": "^4.3.5"
+  },
+  "dependencies": {
+    "commander": "^8.0.0",
+    "globby": "^11.0.4",
+    "pug": "^3.0.2"
+  }
+}
