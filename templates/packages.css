@@ -9,3 +9,11 @@ li:not(:first-child):before {
 #key-bindings li {
   display: inline-block;
 }
+
+.keybinding {
+  font-family: 'Courier New', Courier, monospace;
+  background-color: #eee;
+  border: 1px dotted #ccc;
+  border-radius: 5px;
+  padding: 2px 5px;
+}

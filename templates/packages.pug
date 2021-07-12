@@ -2,6 +2,7 @@ doctype html
 html(lang="en")
   head
     title Visual Studio Code Extensions
+    meta(charset="utf-8")
     style(type="text/css")
       include packages.css
   body
@@ -21,4 +22,5 @@ html(lang="en")
             h3#key-bindings Key Bindings
             ul
               each binding in package.contributes.keybindings
-                li= binding.key
+                li
+                  span.keybinding(title=binding.key+": "+binding.commandTitle)= binding.keyHtml
