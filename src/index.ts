@@ -14,14 +14,14 @@ const extensions = `${homedir}/.vscode/extensions/*/package.json`
 
 type Options = { template: string, output: string };
 
-function keybindingToHtml(binding: string): string {
+function keybindingToHtml(binding: string): Array<string> {
     if (binding.indexOf(' ') >= 0) {
-        return binding.split(' ').map(keybindingToHtml).join(' ');
+        return binding.split(' ').flatMap(keybindingToHtml);
     }
     const modifierSymbols: Record<string, string> = {
         "alt": "⌥",
         "cmd": "⌘",
-        "ctrl": "⌃",
+        "ctrl": "^",
         "shift": "⇧",
     };
     const keySymbols: Record<string, string> = {
@@ -49,7 +49,7 @@ function keybindingToHtml(binding: string): string {
         key = m[2];
     }
 
-    return modifiers.join('') + (keySymbols[key] || key.toUpperCase());
+    return [modifiers.join('') + (keySymbols[key] || key.toUpperCase())];
 }
 
 async function main(options: Options) {

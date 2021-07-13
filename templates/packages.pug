@@ -11,11 +11,10 @@ html(lang="en")
       each package in packages
         div
           h2
-            a(href=package.homepage)= package.displayName
+            a(href=package.homepage)= package.displayName || package.name
           div= package.description
           if package.categories && package.categories.length > 0
-            h3 Categories
-            ul
+            ul.categories
               each category in package.categories
                 li= category
           if package.contributes && package.contributes.keybindings
@@ -23,4 +22,6 @@ html(lang="en")
             ul
               each binding in package.contributes.keybindings
                 li
-                  span.keybinding(title=binding.key+": "+binding.commandTitle)= binding.keyHtml
+                  span(title=binding.key+": "+binding.commandTitle)
+                    each key in binding.keyHtml
+                      span.keybinding= key
