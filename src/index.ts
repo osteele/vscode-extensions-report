@@ -2,6 +2,7 @@ import { program } from 'commander';
 import fs from 'fs';
 import globby from "globby";
 import { homedir } from 'os';
+import { resolve } from 'path/posix';
 import pug from 'pug';
 import { stringify } from 'querystring';
 
@@ -56,11 +57,30 @@ async function main(options: Options) {
     const templatePath = options.template || './templates/packages.pug';
     const outputPath = options.output || './packages.html';
 
+    // load packages
     const packagePaths = await globby([extensions]);
     const packages = await Promise.all(packagePaths.map(async (path) => {
         const contents = fs.readFileSync(path, 'utf8');
-        return JSON.parse(contents);
+        const json = JSON.parse(contents);
+
+        let nlsObject = null;
+        const nlsPath = path.replace(/\.json$/, '.nls.json');
+        try {
+            const nlsData = fs.readFileSync(nlsPath, 'utf8');
+            nlsObject = JSON.parse(nlsData);
+        } catch (e) { };
+
+        for (let k of ['name', 'displayName', 'description']) {
+            if (!(k in json)) continue;
+            const m = json[k].match(/^%(.+)%$/);
+            if (m && nlsObject) {
+                // console.info('replace',
+                json[k] = nlsObject[m[1]];
+            }
+        }
+        return json;
     }));
+
 
     // Rewrite keybindings
     packages.forEach(({ contributes, commands }) => {
@@ -81,7 +101,7 @@ async function main(options: Options) {
     });
 
     // sort by name
-    packages.sort((a, b) => a.name.localeCompare(b.name));
+    packages.sort((a, b) => (a.displayName || a.name).localeCompare(b.displayName || b.name));
 
     const html = pug.renderFile(templatePath, { packages });
     fs.writeFileSync(outputPath, html);
