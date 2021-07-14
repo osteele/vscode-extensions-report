@@ -7,21 +7,39 @@ html(lang="en")
       include packages.css
   body
     h1 Visual Studio Code Extensions
-    ul
+    div
       each package in packages
-        div
-          h2
-            a(href=package.homepage)= package.displayName || package.name
-          div= package.description
-          if package.categories && package.categories.length > 0
-            ul.categories
-              each category in package.categories
-                li= category
-          if package.contributes && package.contributes.keybindings
-            h3#key-bindings Key Bindings
-            ul
-              each binding in package.contributes.keybindings
-                li
-                  span(title=binding.key+": "+binding.commandTitle)
-                    each key in binding.keyHtml
-                      span.keybinding= key
+        .package
+
+          .banner(
+            class=package.galleryBanner && package.galleryBanner.theme || "light"
+            style={background: package.galleryBanner && package.galleryBanner.color || '#eff1f3'}
+            )
+            if package.repository && package.repository.url && package.icon
+              - image_url = package.repository.url.replace(/^(https:\/\/)github\.com\/([^\/]+?\/[^\/]+?)(?:\.git)?$/, '$1raw.githubusercontent.com/$2/master/' + package.icon)
+              img.package-icon(src=image_url)
+            h2.package-name
+              a(href="https://marketplace.visualstudio.com/items?itemName="+package.publisher+"."+package.name)= package.displayName || package.name
+            if package.homepage
+              a(href=package.homepage) Homepage
+            div= package.description
+
+          .content
+            if package.categories && package.categories.length > 0
+              div Categories:
+              ul.categories
+                each category in package.categories
+                  li.category= category
+            if package.features && package.features.length > 0
+              div Features:
+              ul.features
+                each feature in package.features
+                  li.feature= feature
+            if package.contributes && package.contributes.keybindings
+              h3#key-bindings Key Bindings
+              ul
+                each binding in package.contributes.keybindings
+                  li
+                    span(title=binding.key+": "+binding.commandTitle)
+                      each key in binding.keyHtml
+                        span.keybinding= key
