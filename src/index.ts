@@ -71,6 +71,7 @@ async function main(options: ProgramOptions) {
 
     const html = pug.renderFile(templatePath, { packages });
     fs.writeFileSync(outputPath, html);
+    console.log(`Created ${outputPath}`);
 }
 
 const options = <ProgramOptions><unknown>program.parse(process.argv);
