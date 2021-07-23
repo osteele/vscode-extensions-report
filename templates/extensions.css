@@ -17,11 +17,13 @@ h1 {
   padding: 10px 10px;
 }
 
-.banner.light .package-name {
+.banner.light .package-name,
+.banner.light .package-description {
   color: black;
 }
 
-.banner.dark .package-name {
+.banner.dark .package-name,
+.banner.dark .package-description {
   color: white;
 }
 

@@ -22,7 +22,7 @@ html(lang="en")
               a(href="https://marketplace.visualstudio.com/items?itemName="+package.publisher+"."+package.name)= package.displayName || package.name
             if package.homepage
               a(href=package.homepage) Homepage
-            div= package.description
+            div.package-description= package.description
 
           .content
             if package.categories && package.categories.length > 0
