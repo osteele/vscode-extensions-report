@@ -3,7 +3,11 @@
   "version": "0.0.1",
   "description": "Create a formatted summary of active VSCode extensions",
   "main": "index.ts",
+  "bin": {
+    "vscode-extensions-report": "dist/index.js"
+  },
   "scripts": {
+    "build": "tsc",
     "dev": "ts-node src/index.ts",
     "test": "true"
   },

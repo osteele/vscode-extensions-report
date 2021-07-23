@@ -1,64 +1,30 @@
+#!/usr/bin/env node
 import { program } from 'commander';
 import fs from 'fs';
 import globby from "globby";
 import { homedir } from 'os';
-import { resolve } from 'path/posix';
+import path from 'path';
 import pug from 'pug';
-import { stringify } from 'querystring';
+import { keybindingToHtml } from './keynames';
+
+// FIXME: use a different path on Windows
+const extensionsPath = `${homedir}/.vscode/extensions/*/package.json`
+const defaultOutputPath = './vscode-extensions.html';
+const templateDirPath = path.join(__dirname, '../templates');
+
+type ProgramOptions = { template: string, output: string };
 
 program
     .version('0.0.1')
     .option('-t', '--template <template>', 'template file')
     .option('-o', '--output <path>', 'output file');
 
-const extensions = `${homedir}/.vscode/extensions/*/package.json`
-
-type Options = { template: string, output: string };
-
-function keybindingToHtml(binding: string): Array<string> {
-    if (binding.indexOf(' ') >= 0) {
-        return binding.split(' ').flatMap(keybindingToHtml);
-    }
-    const modifierSymbols: Record<string, string> = {
-        "alt": "⌥",
-        "cmd": "⌘",
-        "ctrl": "^",
-        "shift": "⇧",
-    };
-    const keySymbols: Record<string, string> = {
-        "left": "←",
-        "right": "→",
-        "up": "↑",
-        "down": "↓",
-        "page up": "⇞",
-        "page down": "⇟",
-        "backspace": "⌫",
-        "enter": "↩",
-        "escape": "⎋",
-        "home": "↖",
-        "end": "↘",
-        "return": "↩",
-        "space": "␣",
-        "tab": "⇥",
-    };
-    const modifiers = [];
-    let key = binding;
-    while (true) {
-        let m = key.match(/^(alt|cmd|ctrl|shift)\+(.+)/i);
-        if (!m) break;
-        modifiers.push(modifierSymbols[m[1].toLowerCase()]);
-        key = m[2];
-    }
-
-    return [modifiers.join('') + (keySymbols[key] || key.toUpperCase())];
-}
-
-async function main(options: Options) {
-    const templatePath = options.template || './templates/packages.pug';
-    const outputPath = options.output || './packages.html';
+async function main(options: ProgramOptions) {
+    const templatePath = options.template || path.join(templateDirPath, 'extensions.pug');
+    const outputPath = options.output || defaultOutputPath;
 
     // load packages
-    const packagePaths = await globby([extensions]);
+    const packagePaths = await globby([extensionsPath]);
     const packages = await Promise.all(packagePaths.map(async (path) => {
         const contents = fs.readFileSync(path, 'utf8');
         const json = JSON.parse(contents);
@@ -107,5 +73,5 @@ async function main(options: Options) {
     fs.writeFileSync(outputPath, html);
 }
 
-const options = <Options><unknown>program.parse(process.argv);
+const options = <ProgramOptions><unknown>program.parse(process.argv);
 main(options);
